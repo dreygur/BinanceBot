@@ -3,30 +3,39 @@ package order
 import (
 	"context"
 	"fmt"
+	"strings"
 
-	"github.com/adshao/go-binance/v2/futures"
+	"github.com/adshao/go-binance/v2"
 )
 
-func MarketExitPosition(client *futures.Client) (*futures.CreateOrderResponse, error) {
-	order, err := client.NewCreateOrderService().Symbol("BNBETH").
-		Side(futures.SideTypeBuy).Type(futures.OrderTypeMarket).
-		TimeInForce(futures.TimeInForceTypeGTC).Quantity("5").
-		ReduceOnly(true).
+func MarketExitPosition(client *binance.Client, currencyPair, tradeSide, lotSize string) (*binance.CreateOrderResponse, error) {
+	var side binance.SideType
+	fmt.Println(lotSize)
+
+	if strings.ToLower(tradeSide) == "buy" {
+		side = binance.SideTypeBuy
+	} else {
+		side = binance.SideTypeSell
+	}
+
+	order, err := client.NewCreateOrderService().
+		Symbol(currencyPair).
+		Side(side).
+		Type(binance.OrderTypeMarket).
+		Quantity(lotSize).
+		// ReduceOnly(true).
 		Do(context.Background())
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println(order)
 
 	return order, nil
-	// Use Test() instead of Do() for testing.
 }
 
-func ExitPosition(client *futures.Client) {
-	order, err := MarketExitPosition(client)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(order)
-}
+// func ExitPosition(client *futures.Client) {
+// 	order, err := MarketExitPosition(client)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	fmt.Println(order)
+// }
