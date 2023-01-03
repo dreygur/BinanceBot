@@ -24,8 +24,8 @@ var (
 	// secretKey = "9d798723f64a381d3aead74733f34e2e7e9236db612295deb0e752b274d842ec"
 
 	// Future
-	apiKey    = "067ae6966fecb63c04926eee4233dfa29fa9defe1a40e621dd85a91941c6bf91"
-	secretKey = "582b349eba9d2d6fba35749c620c9f89d24292bd2b2871eaad1fa8f39274575d"
+	apiKey    = "mnPeHnXenLvZ3SykyY6GUoQ0nzRr18Mgon2v5kBgL5O9gmtPGlwA3NQGdH4UsU2A"
+	secretKey = "JhAcbVDcrvLp6bvWLhKoLXhS7ThEyDfaiMTENES644pw9bJM9IkbT9Ij6QR7RG7C"
 
 	helpString string = `
 Valid Command Examples:
