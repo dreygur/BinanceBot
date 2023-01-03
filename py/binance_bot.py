@@ -104,18 +104,18 @@ def process_command(raw_string):
       trade_side = data_list[0].upper()
       usdt_size = float(data_list[1])
       print(currency_pair, trade_side, usdt_size)
-      # try:
-      #   enter_trade = market_enter_position(currency_pair,trade_side,get_market_order_lot_size(currency_pair,usdt_size))
-      #   #Response Time
-      #   response_time = time.time()
-      #   time_taken = int((response_time-start_time)*1000)
-      #   #Get Data
-      #   msg_string = "\n*** Market Order Filled ***\nSymbol: #sym\nSide: #side\nFill Price: #price\nSize: #size\nUSD Value: #usd\nTime Taken: #time\n**********\n"
-      #   msg_string = msg_string.replace("#sym",enter_trade['info']['symbol']).replace("#side",enter_trade['info']['side']).replace("#price",enter_trade['info']['avgPrice'])
-      #   msg_string = msg_string.replace("#size",enter_trade['info']['origQty']).replace("#usd",enter_trade['info']['cumQuote']).replace("#time",str(time_taken))
-      #   print(msg_string)
-      # except Exception as e:
-      #   print("Error: "+str(e))
+      try:
+        enter_trade = market_enter_position(currency_pair,trade_side,get_market_order_lot_size(currency_pair,usdt_size))
+        #Response Time
+        response_time = time.time()
+        time_taken = int((response_time-start_time)*1000)
+        #Get Data
+        msg_string = "\n*** Market Order Filled ***\nSymbol: #sym\nSide: #side\nFill Price: #price\nSize: #size\nUSD Value: #usd\nTime Taken: #time\n**********\n"
+        msg_string = msg_string.replace("#sym",enter_trade['info']['symbol']).replace("#side",enter_trade['info']['side']).replace("#price",enter_trade['info']['avgPrice'])
+        msg_string = msg_string.replace("#size",enter_trade['info']['origQty']).replace("#usd",enter_trade['info']['cumQuote']).replace("#time",str(time_taken))
+        print(msg_string)
+      except Exception as e:
+        print("Error: "+str(e))
 
     #If Limit Order
     if len(data_list)== 4:

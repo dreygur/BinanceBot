@@ -5,23 +5,23 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/adshao/go-binance/v2"
+	"github.com/adshao/go-binance/v2/futures"
 )
 
-func MarketExitPosition(client *binance.Client, currencyPair, tradeSide, lotSize string) (*binance.CreateOrderResponse, error) {
-	var side binance.SideType
+func MarketExitPosition(client *futures.Client, currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error) {
+	var side futures.SideType
 	fmt.Println(lotSize)
 
 	if strings.ToLower(tradeSide) == "buy" {
-		side = binance.SideTypeBuy
+		side = futures.SideTypeBuy
 	} else {
-		side = binance.SideTypeSell
+		side = futures.SideTypeSell
 	}
 
 	order, err := client.NewCreateOrderService().
 		Symbol(currencyPair).
 		Side(side).
-		Type(binance.OrderTypeMarket).
+		Type(futures.OrderTypeMarket).
 		Quantity(lotSize).
 		// ReduceOnly(true).
 		Do(context.Background())

@@ -1,14 +1,12 @@
 package main
 
 import (
-	"binancebot/order"
-	"context"
+	"binancebot/utils"
 	"fmt"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/adshao/go-binance/v2"
+	"github.com/adshao/go-binance/v2/futures"
 )
 
 var (
@@ -27,72 +25,9 @@ var (
 	apiKey    = "mnPeHnXenLvZ3SykyY6GUoQ0nzRr18Mgon2v5kBgL5O9gmtPGlwA3NQGdH4UsU2A"
 	secretKey = "JhAcbVDcrvLp6bvWLhKoLXhS7ThEyDfaiMTENES644pw9bJM9IkbT9Ij6QR7RG7C"
 
-	helpString string = `
-Valid Command Examples:
-...............................
-1> buy 300 eth   :-   Buy 300 USDT Worth Of ETH.
-
-2> sell 500 xrp  :-   Sell 500 USDT Worth Of XRP At Market Price.
-
-3> exit doge :-   Exit  Currently Open DOGE position.
-
-4> cancel ada :- Cancel All Pending Orders For ADA
-
-5> buy 500 btc 19000 :-   Buy 500 USDT Worth Of BTC At Limit Price of 19000.
-
-6> sell 200 bnb 350 :-  Sell 500 USDT Worth Of BNB At Limit Price of 350.
-
-...............................
-
--Command Can Be sent In Uppercase or Lowercase-
--Command Must Match Its Format To Process It Properly-
-`
+	// Future Client
+	client *futures.Client
 )
-
-func init() {
-	binance.UseTestnet = true
-}
-
-func processCommand(cmd string) {
-	// client instance
-	client := binance.NewFuturesClient(apiKey, secretKey)
-
-	parsedCmd := strings.Split(strings.ToLower(cmd), " ")
-	var dataList []string
-	for _, v := range parsedCmd {
-		dataList = append(dataList, strings.TrimSpace(v))
-	}
-
-	if len(dataList) == 0 {
-		fmt.Printf("\n\n__________Invalid Command__________\n\n")
-	}
-
-	currencyPair := strings.ToUpper(dataList[1]) + "USDT"
-	// Cancel all order
-	if dataList[0] == "cancel" {
-		err := client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
-		if err != nil {
-			fmt.Println(err)
-		}
-	}
-
-	// Exit the service
-	if dataList[0] == "exit" {
-		os.Exit(0)
-	}
-
-	// Help Message
-	if dataList[0] == "help" {
-		fmt.Println(helpString)
-	}
-
-	// Exit Position (incomplete)
-	if len(dataList) == 2 {
-		if dataList[0] == "exit" {
-			order.MarketEnterPosition(client, currencyPair, "BUY", "500")
-		}
-	}
-}
 
 func main() {
 	// Stop printing error stack
@@ -103,6 +38,11 @@ func main() {
 	// 	}
 	// }()
 
+	binance.UseTestnet = true
+	client = binance.NewFuturesClient(apiKey, secretKey)
+	// Enable RateLimit
+	// client.NewRateLimitService().Do(context.Background())
+
 	fmt.Printf("__________WELCOME__________\n\n")
 	for {
 		start := time.Now()
@@ -110,19 +50,13 @@ func main() {
 		fmt.Print("> ")
 		_, err := fmt.Scanln(&rawString)
 		if err != nil {
-			// fmt.Println(err)
 			fmt.Printf("\n\n__________Invalid Command__________\n\n")
-			fmt.Println(helpString)
+			fmt.Println(utils.HelpString)
 			continue
 		}
-		processCommand(rawString)
+		utils.ProcessCommand(client, rawString)
 		fmt.Printf("Time taken %v\n", time.Since(start))
 	}
-
-	// binance.UseTestnet = true
-	// client := binance.NewFuturesClient(apiKey, secretKey)
-	// Enable RateLimit
-	// client.NewRateLimitService().Do(context.Background())
 
 	// price, err := client.NewListPricesService().Symbol("BTCUSDT").Do(context.Background())
 	// if err != nil {
@@ -132,8 +66,8 @@ func main() {
 
 	// currencyPair := "BTCUSDT"
 	// tradeSide := "BUY"
-	// entryPrice := "10000.0"
-	// lotSize := order.GetLimitOrderLotSize("500.0", entryPrice)
+	// entryPrice := "1.0"
+	// lotSize := order.GetLimitOrderLotSize("0.5", entryPrice)
 
 	// res, err := order.LimitEnterPosition(client, currencyPair, tradeSide, lotSize, entryPrice)
 	// if err != nil {
@@ -145,7 +79,7 @@ func main() {
 	// 	fmt.Println("Market Enter Position", err)
 	// }
 	// fmt.Println(res)
-	// r, err := order.GetMarketOrderLotSize(client, currencyPair, "500.0")
+	// r, err := order.GetMarketOrderLotSize(client, currencyPair, "0.5")
 	// if err != nil {
 	// 	fmt.Println("Get Market order Lot Size", err)
 	// }

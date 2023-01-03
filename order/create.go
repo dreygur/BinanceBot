@@ -45,7 +45,7 @@ func LimitEnterPosition(client *futures.Client, currencyPair, tradeSide, lotSize
 		Symbol(currencyPair).
 		Side(side).
 		Type(futures.OrderTypeLimit).
-		// Quantity(lotSize).
+		Quantity(lotSize).
 		TimeInForce(futures.TimeInForceTypeGTC).
 		Price(entryPrice).Do(context.Background())
 	if err != nil {
