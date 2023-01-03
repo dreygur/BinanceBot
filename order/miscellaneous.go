@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/adshao/go-binance/v2"
+	"github.com/adshao/go-binance/v2/futures"
 )
 
 // Calculate Market Order Lot Size
-func GetMarketOrderLotSize(client *binance.Client, currencyPair, usdtSize string) (string, error) {
+func GetMarketOrderLotSize(client *futures.Client, currencyPair, usdtSize string) (string, error) {
 	prices, err := client.NewListPricesService().
 		Symbol(currencyPair).
 		Do(context.Background())
@@ -33,6 +33,6 @@ func GetLimitOrderLotSize(usdt, limit string) string {
 }
 
 // Fetch Open Position Data
-// func GetOpenPosition(client *binance.Client, currencyPair string) {
+// func GetOpenPosition(client *futures.Client, currencyPair string) {
 // 	positionData := client.N
 // }
