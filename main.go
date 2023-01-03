@@ -1,6 +1,7 @@
 package main
 
 import (
+	"binancebot/order"
 	"context"
 	"fmt"
 
@@ -29,27 +30,24 @@ func main() {
 	}
 	fmt.Println(price[0].Price)
 
-	// currencyPair := "BTCUSDT"
-	// tradeSide := "BUY"
-	// entryPrice := "10000.0"
-	// lotSize := order.GetLimitOrderLotSize("500.0", entryPrice)
-	/*
+	currencyPair := "BTCUSDT"
+	tradeSide := "BUY"
+	entryPrice := "10000.0"
+	lotSize := order.GetLimitOrderLotSize("500.0", entryPrice)
 
-
-		res, err := order.LimitEnterPosition(client, currencyPair, tradeSide, lotSize, entryPrice)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-		res, err = order.MarketEnterPosition(client, currencyPair, tradeSide, lotSize)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-		res, err = order.GetMarketOrderLotSize(client, currencyPair, "500.0")
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-	*/
+	res, err := order.LimitEnterPosition(client, currencyPair, tradeSide, lotSize, entryPrice)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(res)
+	res, err = order.MarketEnterPosition(client, currencyPair, tradeSide, lotSize)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(res)
+	r, err := order.GetMarketOrderLotSize(client, currencyPair, "500.0")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(r)
 }
