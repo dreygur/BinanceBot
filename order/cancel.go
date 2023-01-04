@@ -43,11 +43,3 @@ func MarketExitPosition(client *futures.Client, currencyPair string) (*futures.C
 
 	return order, nil
 }
-
-// func ExitPosition(client *futures.Client) {
-// 	order, err := MarketExitPosition(client)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	fmt.Println(order)
-// }

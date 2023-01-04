@@ -7,8 +7,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-
-	"github.com/adshao/go-binance/v2/futures"
 )
 
 var HelpString string = `
@@ -26,7 +24,7 @@ Valid Command Examples:
 * Command Must Match Its Format To Process It Properly
 `
 
-func ProcessCommand(client *futures.Client, cmd string) {
+func ProcessCommand(cmd string) {
 	var re = regexp.MustCompile(`(?m).*msg=(?P<Message>.*)`)
 
 	var currencyPair string
