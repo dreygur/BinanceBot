@@ -32,6 +32,7 @@ Valid Command Examples:
 `
 
 func ProcessCommand(client *futures.Client, cmd string) {
+	var currencyPair string
 	parsedCmd := strings.Split(strings.ToLower(cmd), " ")
 	var dataList []string
 	for _, v := range parsedCmd {
@@ -42,10 +43,9 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		fmt.Printf("\n\n__________Invalid Command__________\n\n")
 	}
 
-	currencyPair := strings.ToUpper(dataList[1]) + "USDT"
-
 	// Cancel all order
 	if dataList[0] == "cancel" {
+		currencyPair = strings.ToUpper(dataList[1]) + "USDT"
 		err := client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
 		if err != nil {
 			fmt.Println(err)
@@ -65,6 +65,7 @@ func ProcessCommand(client *futures.Client, cmd string) {
 	// Exit Position (incomplete)
 	if len(dataList) == 2 {
 		if dataList[0] == "exit" {
+			currencyPair = strings.ToUpper(dataList[1]) + "USDT"
 			order.MarketExitPosition(client, currencyPair, "BUY", "500")
 		}
 	}
@@ -73,6 +74,9 @@ func ProcessCommand(client *futures.Client, cmd string) {
 	if len(dataList) == 3 {
 		usdtSize := dataList[1]
 		tradeSide := strings.ToUpper(dataList[0])
+		currencyPair = strings.ToUpper(dataList[2]) + "USDT"
+
+		fmt.Println(currencyPair, tradeSide, usdtSize)
 
 		res, err := order.MarketEnterPosition(client, currencyPair, tradeSide, usdtSize)
 		if err != nil {
@@ -84,10 +88,11 @@ func ProcessCommand(client *futures.Client, cmd string) {
 	}
 
 	// Limit Order
-	if len(dataList) == 3 {
+	if len(dataList) == 4 {
 		usdtSize := dataList[1]
 		entryPrice := dataList[3]
 		tradeSide := strings.ToUpper(dataList[0])
+		currencyPair = strings.ToUpper(dataList[2]) + "USDT"
 
 		lotSize := order.GetLimitOrderLotSize(usdtSize, entryPrice)
 		res, err := order.LimitEnterPosition(client, currencyPair, tradeSide, lotSize, entryPrice)

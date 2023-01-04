@@ -10,7 +10,6 @@ import (
 
 func MarketEnterPosition(client *futures.Client, currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error) {
 	var side futures.SideType
-	fmt.Println(lotSize)
 
 	if strings.ToLower(tradeSide) == "buy" {
 		side = futures.SideTypeBuy
