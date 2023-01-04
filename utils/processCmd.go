@@ -2,13 +2,10 @@ package utils
 
 import (
 	"binancebot/order"
-	"context"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
-
-	"github.com/adshao/go-binance/v2/futures"
 )
 
 var HelpString string = `
@@ -26,12 +23,12 @@ Valid Command Examples:
 * Command Must Match Its Format To Process It Properly
 `
 
-func ProcessCommand(client *futures.Client, cmd string) {
+func ProcessCommand(client order.OrderInterface, cmd string) {
 	var re = regexp.MustCompile(`(?m).*msg=(?P<Message>.*)`)
-
 	var currencyPair string
-	parsedCmd := strings.Split(strings.ToLower(cmd), " ")
 	var dataList []string
+
+	parsedCmd := strings.Split(strings.ToLower(cmd), " ")
 	for _, v := range parsedCmd {
 		dataList = append(dataList, strings.TrimSpace(v))
 	}
@@ -54,7 +51,7 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		// Exit Position
 		if dataList[0] == "exit" {
 			currencyPair = strings.ToUpper(dataList[1]) + "USDT"
-			res, err := order.MarketExitPosition(client, currencyPair)
+			res, err := client.MarketExitPosition(currencyPair)
 			if err != nil {
 				fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 			}
@@ -67,7 +64,7 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		// Cancel all order
 		if dataList[0] == "cancel" {
 			currencyPair = strings.ToUpper(dataList[1]) + "USDT"
-			err := client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
+			err := client.CancelOrders(currencyPair)
 			if err != nil {
 				fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 			}
@@ -84,12 +81,12 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		tradeSide := strings.ToUpper(dataList[0])
 		currencyPair = strings.ToUpper(dataList[2]) + "USDT"
 
-		lotSize, err := order.GetMarketOrderLotSize(client, currencyPair, usdtSize)
+		lotSize, err := client.GetMarketOrderLotSize(currencyPair, usdtSize)
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 		}
 
-		res, err := order.MarketEnterPosition(client, currencyPair, tradeSide, lotSize)
+		res, err := client.MarketEnterPosition(currencyPair, tradeSide, lotSize)
 		if err != nil {
 			fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 		}
@@ -119,8 +116,8 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		tradeSide := strings.ToUpper(dataList[0])
 		currencyPair = strings.ToUpper(dataList[2]) + "USDT"
 
-		lotSize := order.GetLimitOrderLotSize(usdtSize, entryPrice)
-		res, err := order.LimitEnterPosition(client, currencyPair, tradeSide, lotSize, entryPrice)
+		lotSize := client.GetLimitOrderLotSize(usdtSize, entryPrice)
+		res, err := client.LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice)
 		if err != nil {
 			fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 		}

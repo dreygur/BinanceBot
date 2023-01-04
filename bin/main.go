@@ -1,6 +1,7 @@
 package main
 
 import (
+	"binancebot/order"
 	"binancebot/utils"
 	"bufio"
 	"encoding/json"
@@ -10,17 +11,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/adshao/go-binance/v2"
-	"github.com/adshao/go-binance/v2/futures"
-
-	figure "github.com/common-nighthawk/go-figure"
+	"github.com/common-nighthawk/go-figure"
 )
-
-type Settings struct {
-	ApiKey     string `json:"apiKey"`
-	Secretkey  string `json:"secretkey"`
-	UseTestnet bool   `json:"testnet" default:"false"`
-}
 
 func main() {
 	// Stop printing error stack
@@ -31,6 +23,12 @@ func main() {
 		}
 	}()
 
+	// Print the logo
+	fmt.Println()
+	myFigure := figure.NewColorFigure("BINANCE BOT", "digital", "green", true)
+	myFigure.Print()
+	fmt.Println()
+
 	// Read the settings file
 	content, err := ioutil.ReadFile("./settings.json")
 	if err != nil {
@@ -38,28 +36,16 @@ func main() {
 	}
 
 	// Unmarshall the settings data into `settings`
-	var settings Settings
-	err = json.Unmarshal(content, &settings)
+	var o order.Order
+	err = json.Unmarshal(content, &o)
 	if err != nil {
 		log.Fatal("Error during Unmarshal(): ", err)
 	}
 
-	// Use testnet?
-	if settings.UseTestnet {
-		futures.UseTestnet = true
-	}
-	// Future Client
-	client := binance.NewFuturesClient(settings.ApiKey, settings.Secretkey)
-
-	// Print the logo
-	fmt.Println()
-	myFigure := figure.NewColorFigure("BINANCE BOT", "digital", "green", true)
-	myFigure.Print()
-	fmt.Println()
-	// fmt.Printf("\n__________WELCOME__________\n\n")
+	client := order.NewClient(o.ApiKey, o.Secretkey, o.UseTestnet)
 
 	for {
-		fmt.Print("> ")
+		fmt.Print("\033[32m", "~# > ", "\033[0m")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan() // use `for scanner.Scan()` to keep reading
 		rawString := scanner.Text()
