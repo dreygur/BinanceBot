@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/common-nighthawk/go-figure"
 )
 
 func main() {
@@ -16,6 +18,12 @@ func main() {
 			os.Exit(0)
 		}
 	}()
+
+	// Print the logo
+	fmt.Println()
+	myFigure := figure.NewColorFigure("BINANCE BOT", "digital", "green", true)
+	myFigure.Print()
+	fmt.Println()
 
 	for {
 		fmt.Print("> ")
