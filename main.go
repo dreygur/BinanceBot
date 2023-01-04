@@ -12,6 +12,8 @@ import (
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/adshao/go-binance/v2/futures"
+
+	figure "github.com/common-nighthawk/go-figure"
 )
 
 type Settings struct {
@@ -49,7 +51,13 @@ func main() {
 	// Future Client
 	client := binance.NewFuturesClient(settings.ApiKey, settings.Secretkey)
 
-	fmt.Printf("\n__________WELCOME__________\n\n")
+	// Print the logo
+	fmt.Println()
+	myFigure := figure.NewColorFigure("BINANCE BOT", "digital", "green", true)
+	myFigure.Print()
+	fmt.Println()
+	// fmt.Printf("\n__________WELCOME__________\n\n")
+
 	for {
 		fmt.Print("> ")
 		scanner := bufio.NewScanner(os.Stdin)
