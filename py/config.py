@@ -1,6 +1,0 @@
-#Binance API Details
-# api_key = 'fpvCUJQoGImqQShS36kowwRt15SDeaXOosjrUePQr3Ux9R7njuV1MbvIzaKYtaQY'
-# api_secret = 'ei15acV7HPr6lln6e36muSXANsKr19U7ULJcQqMXG9RONPDroBV9deZtWuIENc8s'
-
-api_key = 'b762687ec7d72cdf03b97a42e4d9ef24e99b082efb63b1d2d431a7aa394c573b'
-api_secret = 'ffe69c27b2315aeed69cf44594e3d360f73bb66b4dfc633f9076e19995ef1efc'
