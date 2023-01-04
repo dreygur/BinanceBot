@@ -1,10 +1,6 @@
 package order
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-
 	"github.com/adshao/go-binance/v2"
 	"github.com/adshao/go-binance/v2/futures"
 )
@@ -26,26 +22,18 @@ type OrderInterface interface {
 	CancelOrders(currencyPair string) error
 }
 
-func NewClient() OrderInterface {
-	// Read the settings file
-	content, err := ioutil.ReadFile("./settings.json")
-	if err != nil {
-		log.Fatal("Error when opening file: ", err)
-	}
-
-	// Unmarshall the settings data into `settings`
-	var o Order
-	err = json.Unmarshal(content, &o)
-	if err != nil {
-		log.Fatal("Error during Unmarshal(): ", err)
-	}
+func NewClient(apikey, secretkey string, useTestnet bool) OrderInterface {
 
 	// Use testnet?
-	if o.UseTestnet {
+	if useTestnet {
 		futures.UseTestnet = true
 	}
-	// Future Client
-	o.Client = binance.NewFuturesClient(o.ApiKey, o.Secretkey)
 
-	return &o
+	return &Order{
+		ApiKey:     apikey,
+		Secretkey:  secretkey,
+		UseTestnet: useTestnet,
+		// Future Client
+		Client: binance.NewFuturesClient(apikey, secretkey),
+	}
 }

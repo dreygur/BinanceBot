@@ -2,7 +2,6 @@ package order
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/adshao/go-binance/v2/futures"
@@ -32,7 +31,6 @@ func (o *Order) MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*f
 
 func (o *Order) LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice string) (*futures.CreateOrderResponse, error) {
 	var side futures.SideType
-	fmt.Println(lotSize)
 
 	if strings.ToLower(tradeSide) == "buy" {
 		side = futures.SideTypeBuy

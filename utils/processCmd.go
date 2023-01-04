@@ -23,12 +23,10 @@ Valid Command Examples:
 * Command Must Match Its Format To Process It Properly
 `
 
-func ProcessCommand(cmd string) {
+func ProcessCommand(client order.OrderInterface, cmd string) {
 	var re = regexp.MustCompile(`(?m).*msg=(?P<Message>.*)`)
 	var currencyPair string
 	var dataList []string
-
-	client := order.NewClient()
 
 	parsedCmd := strings.Split(strings.ToLower(cmd), " ")
 	for _, v := range parsedCmd {
@@ -85,7 +83,7 @@ func ProcessCommand(cmd string) {
 
 		lotSize, err := client.GetMarketOrderLotSize(currencyPair, usdtSize)
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 		}
 
 		res, err := client.MarketEnterPosition(currencyPair, tradeSide, lotSize)
