@@ -14,22 +14,16 @@ import (
 var HelpString string = `
 Valid Command Examples:
 ...............................
-1> buy 300 eth   :-   Buy 300 USDT Worth Of ETH.
-
-2> sell 500 xrp  :-   Sell 500 USDT Worth Of XRP At Market Price.
-
-3> exit doge :-   Exit  Currently Open DOGE position.
-
-4> cancel ada :- Cancel All Pending Orders For ADA
-
-5> buy 500 btc 19000 :-   Buy 500 USDT Worth Of BTC At Limit Price of 19000.
-
-6> sell 200 bnb 350 :-  Sell 500 USDT Worth Of BNB At Limit Price of 350.
-
+1) buy 300 eth        : Buy 300 USDT Worth Of ETH
+2) sell 500 xrp       : Sell 500 USDT Worth Of XRP At Market Price
+3) exit doge          : Exit  Currently Open DOGE position
+4) cancel ada         : Cancel All Pending Orders For ADA
+5) buy 500 btc 19000  : Buy 500 USDT Worth Of BTC At Limit Price of 19000
+6) sell 200 bnb 350   : Sell 500 USDT Worth Of BNB At Limit Price of 350
 ...............................
 
--Command Can Be sent In Uppercase or Lowercase-
--Command Must Match Its Format To Process It Properly-
+* Command Can Be sent In Uppercase or Lowercase
+* Command Must Match Its Format To Process It Properly
 `
 
 func ProcessCommand(client *futures.Client, cmd string) {
@@ -60,7 +54,7 @@ func ProcessCommand(client *futures.Client, cmd string) {
 		// Exit Position
 		if dataList[0] == "exit" {
 			currencyPair = strings.ToUpper(dataList[1]) + "USDT"
-			res, err := order.MarketExitPosition(client, currencyPair, "BUY", "500")
+			res, err := order.MarketExitPosition(client, currencyPair)
 			if err != nil {
 				fmt.Println("Error:", re.FindStringSubmatch(err.Error())[1])
 			}

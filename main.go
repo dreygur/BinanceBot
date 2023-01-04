@@ -3,7 +3,10 @@ package main
 import (
 	"binancebot/utils"
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
@@ -11,14 +14,11 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
-var (
-	// Future
-	apiKey    = "067ae6966fecb63c04926eee4233dfa29fa9defe1a40e621dd85a91941c6bf91"
-	secretKey = "582b349eba9d2d6fba35749c620c9f89d24292bd2b2871eaad1fa8f39274575d"
-
-	// Future Client
-	client *futures.Client
-)
+type Settings struct {
+	ApiKey     string `json:"apiKey"`
+	Secretkey  string `json:"secretkey"`
+	UseTestnet bool   `json:"testnet" default:"false"`
+}
 
 func main() {
 	// Stop printing error stack
@@ -29,8 +29,25 @@ func main() {
 		}
 	}()
 
-	futures.UseTestnet = true
-	client = binance.NewFuturesClient(apiKey, secretKey)
+	// Read the settings file
+	content, err := ioutil.ReadFile("./settings.json")
+	if err != nil {
+		log.Fatal("Error when opening file: ", err)
+	}
+
+	// Unmarshall the settings data into `settings`
+	var settings Settings
+	err = json.Unmarshal(content, &settings)
+	if err != nil {
+		log.Fatal("Error during Unmarshal(): ", err)
+	}
+
+	// Use testnet?
+	if settings.UseTestnet {
+		futures.UseTestnet = true
+	}
+	// Future Client
+	client := binance.NewFuturesClient(settings.ApiKey, settings.Secretkey)
 
 	fmt.Printf("\n__________WELCOME__________\n\n")
 	for {
