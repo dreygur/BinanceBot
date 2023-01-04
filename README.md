@@ -11,6 +11,8 @@
 
 ---
 
+Put api key and secret in `settings.json`
+
 ### Important
 _*_ Command Can Be sent In Uppercase or Lowercase
 
