@@ -16,6 +16,7 @@ func GetMarketOrderLotSize(client *futures.Client, currencyPair, usdtSize string
 	if err != nil {
 		return "", err
 	}
+
 	return GetLimitOrderLotSize(usdtSize, prices[0].Price), nil
 }
 
@@ -29,7 +30,7 @@ func GetLimitOrderLotSize(usdt, limit string) string {
 	if err != nil {
 		fmt.Println(err)
 	}
-	return strconv.FormatFloat(usd/lim, 'G', -1, 32)
+	return fmt.Sprintf("%.2f", usd/lim)
 }
 
 // Fetch Open Position Data
