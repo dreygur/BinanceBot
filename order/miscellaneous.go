@@ -34,6 +34,11 @@ func GetLimitOrderLotSize(usdt, limit string) string {
 }
 
 // Fetch Open Position Data
-// func GetOpenPosition(client *futures.Client, currencyPair string) {
-// 	positionData := client.N
-// }
+func GetOpenPosition(client *futures.Client, currencyPair string) (*futures.PositionRisk, error) {
+	res, err := client.NewGetPositionRiskService().Symbol(currencyPair).Do(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	return res[0], nil
+}
