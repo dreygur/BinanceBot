@@ -10,8 +10,8 @@ import (
 	"net/http"
 )
 
-type ProxyController interface {
-	ProxyHandler(writer http.ResponseWriter, request *http.Request)
+type RouteController interface {
+	RouteHandler(writer http.ResponseWriter, request *http.Request)
 }
 type controller struct{}
 
@@ -19,13 +19,20 @@ var (
 	orderService service.OrderService
 )
 
-func NewProxyController(orders service.OrderService) ProxyController {
+func NewRouteController(orders service.OrderService) RouteController {
 	orderService = orders
 	return &controller{}
 }
 
-func (*controller) ProxyHandler(writer http.ResponseWriter, request *http.Request) {
+func (*controller) RouteHandler(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-type", "application/json")
+	if request.Method != "GET" {
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	query := request.URL.Query()
+	fmt.Println(query["token"])
 
 	orders, err := orderService.GetOpenPosition("ETHUSDT")
 	if err != nil {

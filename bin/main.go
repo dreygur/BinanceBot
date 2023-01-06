@@ -25,7 +25,7 @@ type Settings struct {
 var (
 	settings      Settings
 	orderService  service.OrderService
-	botController controller.ProxyController
+	botController controller.RouteController
 	httpRouter    router.Router
 )
 
@@ -57,7 +57,7 @@ func init() {
 
 	// Initiate services
 	orderService = service.NewClient(settings.ApiKey, settings.Secretkey, settings.UseTestnet)
-	botController = controller.NewProxyController(orderService)
+	botController = controller.NewRouteController(orderService)
 	httpRouter = router.NewStdRouter(httpSettings)
 }
 
@@ -70,7 +70,10 @@ func main() {
 		}
 	}()
 
+	// Routes
+	httpRouter.HandleReq("/", botController.RouteHandler)
+	httpRouter.HandleReq("/openposition", botController.RouteHandler)
+
 	// HTTP Server
-	httpRouter.HandleReq("/", botController.ProxyHandler)
 	httpRouter.Serve("8080")
 }
