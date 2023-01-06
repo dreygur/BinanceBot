@@ -3,27 +3,39 @@ package order
 import (
 	"context"
 	"fmt"
-	"strings"
+	"math"
+	"strconv"
 
 	"github.com/adshao/go-binance/v2/futures"
 )
 
-func MarketExitPosition(client *futures.Client, currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error) {
-	var side futures.SideType
-	fmt.Println(lotSize)
-
-	if strings.ToLower(tradeSide) == "buy" {
-		side = futures.SideTypeBuy
-	} else {
-		side = futures.SideTypeSell
+func (o *Order) MarketExitPosition(currencyPair string) (*futures.CreateOrderResponse, error) {
+	var (
+		reverseTradeSide string
+		positionAmt      float64
+	)
+	position, err := o.GetOpenPosition(currencyPair)
+	if err != nil {
+		return nil, err
 	}
 
-	order, err := client.NewCreateOrderService().
+	if position.PositionSide == "BOTH" {
+		reverseTradeSide = "SELL"
+		positionAmt, err = strconv.ParseFloat(position.PositionAmt, 32)
+		if err != nil {
+			return nil, err
+		}
+		if positionAmt < 0 {
+			reverseTradeSide = "BUY"
+		}
+	}
+
+	order, err := o.Client.NewCreateOrderService().
 		Symbol(currencyPair).
-		Side(side).
+		Side(futures.SideType(reverseTradeSide)).
 		Type(futures.OrderTypeMarket).
-		Quantity(lotSize).
-		// ReduceOnly(true).
+		Quantity(fmt.Sprintf("%.2f", math.Abs(positionAmt))).
+		ReduceOnly(true).
 		Do(context.Background())
 	if err != nil {
 		return nil, err
@@ -32,10 +44,6 @@ func MarketExitPosition(client *futures.Client, currencyPair, tradeSide, lotSize
 	return order, nil
 }
 
-// func ExitPosition(client *futures.Client) {
-// 	order, err := MarketExitPosition(client)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	fmt.Println(order)
-// }
+func (o *Order) CancelOrders(currencyPair string) error {
+	return o.Client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
+}
