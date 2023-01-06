@@ -1,4 +1,4 @@
-package order
+package service
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
-func (o *Order) MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error) {
+func (o *Service) MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error) {
 	var side futures.SideType
 
 	if strings.ToLower(tradeSide) == "buy" {
@@ -16,7 +16,7 @@ func (o *Order) MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*f
 		side = futures.SideTypeSell
 	}
 
-	order, err := o.Client.NewCreateOrderService().
+	order, err := client.NewCreateOrderService().
 		Symbol(currencyPair).
 		Side(side).
 		Type(futures.OrderTypeMarket).
@@ -29,7 +29,7 @@ func (o *Order) MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*f
 	return order, nil
 }
 
-func (o *Order) LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice string) (*futures.CreateOrderResponse, error) {
+func (o *Service) LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice string) (*futures.CreateOrderResponse, error) {
 	var side futures.SideType
 
 	if strings.ToLower(tradeSide) == "buy" {
@@ -38,7 +38,7 @@ func (o *Order) LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice 
 		side = futures.SideTypeSell
 	}
 
-	order, err := o.Client.NewCreateOrderService().
+	order, err := client.NewCreateOrderService().
 		Symbol(currencyPair).
 		Side(side).
 		Type(futures.OrderTypeLimit).

@@ -1,4 +1,4 @@
-package order
+package service
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
-func (o *Order) MarketExitPosition(currencyPair string) (*futures.CreateOrderResponse, error) {
+func (o *Service) MarketExitPosition(currencyPair string) (*futures.CreateOrderResponse, error) {
 	var (
 		reverseTradeSide string
 		positionAmt      float64
@@ -30,7 +30,7 @@ func (o *Order) MarketExitPosition(currencyPair string) (*futures.CreateOrderRes
 		}
 	}
 
-	order, err := o.Client.NewCreateOrderService().
+	order, err := client.NewCreateOrderService().
 		Symbol(currencyPair).
 		Side(futures.SideType(reverseTradeSide)).
 		Type(futures.OrderTypeMarket).
@@ -44,6 +44,6 @@ func (o *Order) MarketExitPosition(currencyPair string) (*futures.CreateOrderRes
 	return order, nil
 }
 
-func (o *Order) CancelOrders(currencyPair string) error {
-	return o.Client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
+func (o *Service) CancelOrders(currencyPair string) error {
+	return client.NewCancelAllOpenOrdersService().Symbol(currencyPair).Do(context.Background())
 }

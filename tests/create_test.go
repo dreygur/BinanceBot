@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"binancebot/order"
+	"binancebot/service"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -14,7 +14,7 @@ var (
 	currencyPair string = "ETHUSDT"
 )
 
-func getSettings() order.OrderInterface {
+func getSettings() service.OrderService {
 	// Read the settings file
 	content, err := ioutil.ReadFile("../settings.json")
 	if err != nil {
@@ -22,13 +22,13 @@ func getSettings() order.OrderInterface {
 	}
 
 	// Unmarshall the settings data into `settings`
-	var o order.Order
+	var o service.Service
 	err = json.Unmarshal(content, &o)
 	if err != nil {
 		log.Fatal("Error during Unmarshal(): ", err)
 	}
 
-	return order.NewClient(o.ApiKey, o.ApiKey, o.UseTestnet)
+	return service.NewClient(o.ApiKey, o.ApiKey, o.UseTestnet)
 }
 
 func TestGetMarketOrderLotSize(t *testing.T) {

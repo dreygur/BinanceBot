@@ -1,18 +1,21 @@
-package order
+package service
 
 import (
 	"github.com/adshao/go-binance/v2"
 	"github.com/adshao/go-binance/v2/futures"
 )
 
-type Order struct {
+type Service struct {
 	ApiKey     string `json:"apiKey"`
 	Secretkey  string `json:"secretkey"`
 	UseTestnet bool   `json:"testnet" default:"false"`
-	Client     *futures.Client
 }
 
-type OrderInterface interface {
+var (
+	client *futures.Client
+)
+
+type OrderService interface {
 	MarketEnterPosition(currencyPair, tradeSide, lotSize string) (*futures.CreateOrderResponse, error)
 	LimitEnterPosition(currencyPair, tradeSide, lotSize, entryPrice string) (*futures.CreateOrderResponse, error)
 	MarketExitPosition(currencyPair string) (*futures.CreateOrderResponse, error)
@@ -22,18 +25,19 @@ type OrderInterface interface {
 	CancelOrders(currencyPair string) error
 }
 
-func NewClient(apikey, secretkey string, useTestnet bool) OrderInterface {
+func NewClient(apikey, secretkey string, useTestnet bool) OrderService {
 
 	// Use testnet?
 	if useTestnet {
 		futures.UseTestnet = true
 	}
 
-	return &Order{
+	// Future Client
+	client = binance.NewFuturesClient(apikey, secretkey)
+
+	return &Service{
 		ApiKey:     apikey,
 		Secretkey:  secretkey,
 		UseTestnet: useTestnet,
-		// Future Client
-		Client: binance.NewFuturesClient(apikey, secretkey),
 	}
 }

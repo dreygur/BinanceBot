@@ -1,4 +1,4 @@
-package order
+package service
 
 import (
 	"context"
@@ -9,8 +9,8 @@ import (
 )
 
 // Calculate Market Order Lot Size
-func (o *Order) GetMarketOrderLotSize(currencyPair, usdtSize string) (string, error) {
-	prices, err := o.Client.NewListPricesService().
+func (o *Service) GetMarketOrderLotSize(currencyPair, usdtSize string) (string, error) {
+	prices, err := client.NewListPricesService().
 		Symbol(currencyPair).
 		Do(context.Background())
 	if err != nil {
@@ -21,7 +21,7 @@ func (o *Order) GetMarketOrderLotSize(currencyPair, usdtSize string) (string, er
 }
 
 // Calculate Limit Order Lot Size
-func (o *Order) GetLimitOrderLotSize(usdt, limit string) string {
+func (o *Service) GetLimitOrderLotSize(usdt, limit string) string {
 	usd, err := strconv.ParseFloat(usdt, 32)
 	if err != nil {
 		fmt.Println(err)
@@ -34,8 +34,8 @@ func (o *Order) GetLimitOrderLotSize(usdt, limit string) string {
 }
 
 // Fetch Open Position Data
-func (o *Order) GetOpenPosition(currencyPair string) (*futures.PositionRisk, error) {
-	res, err := o.Client.NewGetPositionRiskService().Symbol(currencyPair).Do(context.Background())
+func (o *Service) GetOpenPosition(currencyPair string) (*futures.PositionRisk, error) {
+	res, err := client.NewGetPositionRiskService().Symbol(currencyPair).Do(context.Background())
 	if err != nil {
 		return nil, err
 	}
