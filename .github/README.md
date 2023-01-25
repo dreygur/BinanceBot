@@ -1,5 +1,7 @@
 # Binance Bot
 
+A terminal (bot) that parses commands and executes buy/sell order(s) on Binance Future Trading platform. The bot is intended to be fast and reliable for placing trade order quickly. Ideal to host the bot on a VPS located in Tokyo, Japan for faster trading. Or use from a location where ping-rate is lower to api.binance.com
+
 ### Valid Command Examples:
 
 1) buy 300 eth        : Buy 300 USDT Worth Of ETH
