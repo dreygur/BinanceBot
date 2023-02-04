@@ -16,6 +16,5 @@ A terminal (bot) that parses commands and executes buy/sell order(s) on Binance 
 Put api key and secret in `settings.json`
 
 ### Important
-_*_ Command Can Be sent In Uppercase or Lowercase
-
-_*_ Command Must Match Its Format To Process It Properly
+- Command Can Be sent In Uppercase or Lowercase
+- Command Must Match Its Format To Process It Properly
